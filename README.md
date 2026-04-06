@@ -28,7 +28,6 @@ after pay, text me message of transaction in order to given you password to cont
     <ol type="1">
         <li>Web developer </li>
         <li>HTML codes</li>
-        <li>CSS codes</li>
     </ol>
 
 <button onclick="logout()">Logout</button>
