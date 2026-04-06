@@ -7,7 +7,7 @@
 <body>
 <div class="container">
 <div id="loginForm">
-    <h1><u><font><p>WELCOME TO MY WEBSITE</font></u></p>
+    <h1><u><font><p>WELCOME TO MYWEBSITE</font></u></p>
     <img src="logo.jpg" alt="my logo"><br>
 This website is created SAMWEL by using phone
 
