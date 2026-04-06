@@ -104,7 +104,7 @@ const users = [
 "02.5582.01.03.2025",
 "02.3539.01.03.2025",
     ];
-    const correctPassword = "IT";
+    const correctPassword = "IT2026";
     function login() {
         let reg = document.getElementById("regNumber").value;
         let pass = document.getElementById("password").value;
