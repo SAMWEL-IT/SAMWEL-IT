@@ -1,0 +1,105 @@
+   body {
+        font-family: Arial;
+        background: #f0f2f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .container {
+        text-align: center;
+        background: #FFFFFF;
+        padding: 20px;
+        border-radius: 10px;
+        width: 350px;
+        height: px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    h2 {
+        text-align: center;
+        font-size: 30px;
+    }
+    font{
+        color: #9800FF;
+        font-size: 60px;
+    }
+    input {
+        width: 85%;
+        padding: 10px;
+        margin: 8px 0;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    button {
+        width: 90%;
+        padding: 10px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #0056b3;
+    }
+
+    .profile {
+        display: none;
+        text-align: center;
+    }
+
+    .success {
+        color: green;
+        font-weight: bold;
+    }
+
+    .error {
+        color: red;
+    }
+    img {
+     border-radius: 0px;   
+     width:150px;
+     font-size: 200px;
+    }
+    u{
+        color: #000;
+    }
+    li{
+        text-align: left;
+    }
+    .hidden {
+  display: none;
+  margin-top: 10px;
+  padding: 10px;
+  background: #e9ecef;
+  border-radius: 5px;
+}
+
+.payment {
+  background: #ffc107;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
+}
+.course {
+  background: white;
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f4f4f4;
+    }
+    header {
+  background: #007bff;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  }
