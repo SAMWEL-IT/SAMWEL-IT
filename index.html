@@ -1,63 +1,96 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <link rel="stylesheet" href="style.css">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- 
- <div class="container">
-<body>
-  
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<div class="container">
+<body> 
 <header>
-<h1>IT Learning Platform</h1>
-<p>Learn Programming, Networking & More....</p>
+<h2>SAMWEL-IT💻</h2>
+<p>Websites • Templates • IT Services</p>
+<img src="logo1.jpg">
 </header>
-  </head>
+</head></br></br>
 <body>
 <div id="loginForm">
-    <img src="logo1.jpg"><br>
-
 </p>
-<h2>Application Registration Form</h2>
+<h2> Registration Login Form</h2>
 <input type="text" id="regNumber" placeholder="Enter CBE Registration Number " required>
-
-<input type="password" id="password" placeholder="Enter Password IT2026" required><br>
+<input type="password" id="password" placeholder="Enter Password DIT1" required><br>
 <button onclick="login()">Login</button>
 <p id="message"></p>
+<footer>
+<h5> © 2026 SAMWEL-IT💻| Built with HTML & CSS</h5>
+</footer>
 </div>
+<div>
 <div id="profile" class="profile">
-   <img src="logo1.jpg"><br> 
-<h2>Welcome to my website</h2>
+<h2>Welcome To My Website</h2>
 <p class="success">You are joined to this website </p>
-      
-<div class="course">
-    <button onclick="showContent('course1')">Click to View More</button><div id="course1" class="hidden">
-  
-<h3>HTML & CSS Basics</h3>
+<button onclick="showContent('course1')">Click to View More
+</button></div>
+<di id="course1" class="hidden">
+</header>
+<nav>
+    <a href="Mwanza-Tanzania">Home</a>
+    <a href="Online Website">Products</a>
+    <a href="+255745375356">Contact</a>
+</nav>
+<section class="hero">
+<h1>Build Your Website Today </h1>
+<p>Learn how to create and design website (web developer)</p>
+</section>
+<video autoplay loop muted>
+<source src="fire.mp4" type="video/mp4"></video>
+<section class="products">
+<div class="card">
+<div class="card-content">
+<h3>For different codes of HTML,CSS and JS, then learning how to write and appear to your website something like:</h3>
+<ul type="button">
+                <li>HTML tags</li>
+                <li>CSS design styles</li>
+                <li>How to change color background</li>
+                <li>How add photo & video</li>
+                <li>How to design table, container & section </li>
+                <li>How to design html by use CSS</li>
+                <li>How to design html by use JS(Advanced)</li>
+</ul>
+<p class="price"> Tsh 5,000/=</p>
+</div>
+</div>
+<div class="card">
+<div class="card-content">
+<h3>
+◇To learning how to apploid your html code to be online website.
+</br></br>
+◇If you need your online website I creating you. Either can be: 
+</h3>
+<ul type="square">
+<li>Business Website & Company Website</li>
+<li> Your first Website(stater website) & developing by add content</li>
+</ul>
+<p class="price"> Tsh 20,000/=</p>
+</div>
+</div> 
+<a href="https://wa.me/+255745375356" class="btn">Click here to order now</a></br>
+<div>  
+<h3>HTML & CSS</h3>  
 <p>Learn how to build websites from scratch.</p>
 <p>✔ HTML Structure
-
 ✔ CSS Styling ✔ Build your first website</p>
-
-
-    
-    
-
-    <h3>JavaScript Basics</h3>
-    <p>Make your website interactive.</p>
-    <p>✔ Variables
-
+<h3>JavaScript Basics</h3>
+<p>Make your website interactive.</p>
+<p>✔ Variables
 ✔ Functions ✔ Events ✔ Build interactive apps</p>
-
 <div class="payment">
-    <p><strong>To access full course:</strong></p>
-    <p>Send Tsh 5000 to: <strong>+255745375356</strong></p>
-   
-  <link rel="stylesheet" href="style.css">
-
-  
-  
-<button onclick="logout()">Logout</button>
+<p><strong>To access full course:</strong></p>
+<p>Send Tsh 30,000/= to: <strong>+255745375356</strong></p>
+<link rel="stylesheet" href="style.css">
 </div>
 </div>
+<footer>
+<h5> © 2026 SAMWEL-IT💻| Built with HTML & CSS</h5>
+</footer>
 <script>
 const users = [
 "02.8336.01.03.2025",
@@ -127,7 +160,7 @@ const users = [
 "02.5582.01.03.2025",
 "02.3539.01.03.2025",
     ];
-    const correctPassword = "IT2026";
+    const correctPassword = "DIT1";
     function login() {
         let reg = document.getElementById("regNumber").value;
         let pass = document.getElementById("password").value;
@@ -141,29 +174,14 @@ const users = [
             msg.className = "error";
         }
     }
-    function logout() {
-        document.getElementById("loginForm").style.display = "block";
-        document.getElementById("profile").style.display = "none";
-    }
-</script>   
-  </div>
-  </div></div><script>
+    
+</script>
+</div>
+</div></div><script>
   function showContent(id) {
     var content = document.getElementById(id);
     content.classList.toggle('hidden');
   }
-
-  function unlockCourse(id) {
-    var content = document.getElementById(id);
-    content.innerHTML = `
-      <h4>Course Unlocked 🎉</h4>
-      <p>Welcome! You can now access full learning materials.</p>
-      <ul>
-        <li>Lesson Notes</li>
-        <li>Downloadable Files</li>
-        <li>Practice Exercises</li>
-      </ul>
-    `;
-  }
+ 
 </script></body>
 </html>
