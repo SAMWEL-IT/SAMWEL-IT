@@ -1,187 +1,231 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<link rel="stylesheet" href="style.css">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<div class="container">
-<body> 
-<header>
-<h2>SAMWEL-IT💻</h2>
-<p>Websites • Templates • IT Services</p>
-<img src="logo1.jpg">
-</header>
-</head></br></br>
+<title>Student System</title>
+<link rel="stylesheet"href="style.css">
+</head>
 <body>
-<div id="loginForm">
-</p>
-<h2> Registration Login Form</h2>
-<input type="text" id="regNumber" placeholder="Enter CBE Registration Number " required>
-<input type="password" id="password" placeholder="Enter Password DIT1" required><br>
-<button onclick="login()">Login</button>
-<p id="message"></p>
-<footer>
-<h5> © 2026 SAMWEL-IT💻| Built with HTML & CSS</h5>
-</footer>
+<!-- ================= REGISTER ================= -->
+<table border="5%"cellpadding="5%"width="100%"cellspacing="0">
+<tr>
+<td>
+<div id="register" class="page">
+<header>
+<h2>Registration Form</h2>
+<h4>This is example of application Register system</h4>
+<img src="logo1.jpg">
+</header></br></br></br></br>
+<form id="regForm">
+<input type="text" id="fname" placeholder="First Name"required><br>
+<input type="text" id="sname" placeholder="Second Name" required><br>
+<input type="text" id="lname" placeholder="Last Name" required><br>
+<input type="number" id="phone" placeholder="Phone Number" required><br>
+<select id="gender">
+<option>Male</option>
+<option>Female</option>
+</select>
+<br>
+<input type="email" id="email" placeholder="Email" required><br>
+<input type="text" id="nation" placeholder="Nationality" required><br>
+<input type="password" id="password" placeholder="Enter your Password" required><br>
+<button type="submit">Register</button>
+</form>
+<p>Already registered? <button onclick="show('login')">Login</button></p>
 </div>
-<div>
-<div id="profile"class="profile">
-<h2>Welcome To My Website</h2>
-<p class="success">You are joined to this website </p>
-<button onclick="showContent('course1')">Click to View More
-</button></div>
-<di id="course1" class="hidden">
-</header>
-<nav>
-    <a href="Mwanza-Tanzania">Home</a>
-    <a href="Online Website">Products</a>
-    <a href="+255745375356">Contact</a>
-</nav>
-<section class="hero">
-<h1>Build Your Website Today </h1>
-<p>Learn how to create and design website (web developer)</p>
-</section>
-<video autoplay loop muted>
-<source src="fire.mp4" type="video/mp4"></video>
-<section class="products">
-<div class="card">
-<div class="card-content">
-<h3>For different codes of HTML,CSS and JS, then learning how to write and appear to your website something like:</h3>
-<ul type="button">
-                <li>HTML tags</li>
-                <li>CSS design styles</li>
-                <li>How to change color background</li>
-                <li>How add photo & video</li>
-                <li>How to design table, container & section </li>
-                <li>How to design html by use CSS</li>
-                <li>How to design html by use JS(Advanced)</li>
-</ul>
-<p class="price"> Tsh 5,000/=</p>
+<!-- ================= LOGIN ================= -->
+<div id="login" class="page">
+<h2>Login</h2>
+<form id="loginForm">
+<input type="text" id="lphone" placeholder="Phone Number" required><br>
+<input type="password" id="lpassword" placeholder="Password" required><br>
+<button type="submit">Login</button>
+</form>
+<h3>Admin Only can Login here</h3>
+<input type="password" id="adminPass" placeholder="Admin Password">
+<button onclick="adminLogin()">Admin Login</button>
+<p><button onclick="show('register')">Back</button></p>
 </div>
+<!-- ================= DASHBOARD ================= -->
+<div id="dashboard" class="page">
+    
+<div id="output"></div>
+<button onclick="logout()">Logout</button>
 </div>
-<div class="card">
-<div class="card-content">
-<h3>
-◇To learning how to apploid your html code to be online website.
-</br></br>
-◇If you need your online website I creating you. Either can be: 
-</h3>
-<ul type="square">
-<li>Business Website & Company Website</li>
-<li> Your first Website(stater website) & developing by add content</li>
-</ul>
-<p class="price"> Tsh 20,000/=</p>
-</div>
-</div> 
-<a href="https://wa.me/+255745375356" class="btn">Click here to order now</a></br>
-<div>  
-<h3>HTML & CSS</h3>  
-<p>Learn how to build websites from scratch.</p>
-<p>✔ HTML Structure
-✔ CSS Styling ✔ Build your first website</p>
-<h3>JavaScript Basics</h3>
-<p>Make your website interactive.</p>
-<p>✔ Variables
-✔ Functions ✔ Events ✔ Build interactive apps</p>
-<div class="payment">
-<p><strong>To access full course:</strong></p>
-<p>Send Tsh 30,000/= to: <strong>+255745375356</strong></p>
-<link rel="stylesheet" href="style.css">
-</div>
-</div>
-<footer>
-<h5> © 2026 SAMWEL-IT💻| Built with HTML & CSS</h5>
-</footer>
 <script>
-const users = [
-"02.8336.01.03.2025",
-"02.6931.01.03.2025",
-"02.3368.01.03.2025",
-"02.1369.21.03.2022",
-"02.2265.01.03.2025",
-"02.0235.01.03.2025",
-"02.6728.01.03.2025",
-"02.5377.01.03.2025",
-"02.0748.01.03.2025",
-"02.4693.01.03.2025",
-"02.3799.01.03.2025",
-"02.0185.31.03.2023",
-"02.5031.01.03.2025",
-"02.0989.01.03.2025",
-"02.2503.01.03.2025",
-"02.1695.01.03.2025",
-"02.4938.01.03.2025",
-"02.2599.31.03.2023",
-"02.7231.01.03.2025",
-"02.8147.01.03.2025",
-"02.2236.01.03.2025",
-"02.2236.01.03.2025",
-"02.1101.01.03.2025",
-"02.7214.01.03.2025",
-"02.3705.01.03.2025",
-"02.3384.01.03.2025",
-"02.0224.01.03.2025",
-"02.1516.01.03.2025",
-"02.7929.01.03.2025",
-"02.7653.01.03.2025",
-"02.4714.01.03.2025",
-"02.9698.01.03.2025",
-"02.4862.01.03.2025",
-"02.6442.01.03.2025",
-"02.0833.01.03.2025",
-"02.8071.01.03.2025",
-"02.9669.01.03.2025",
-"02.3725.01.03.2025",
-"02.8443.01.03.2025",
-"02.0188.01.03.2025",
-"02.1471.01.03.2025",
-"02.9064.01.03.2025",
-"02.5907.01.03.2025",
-"02.1145.01.03.2025",
-"02.2562.01.03.2025",
-"02.9798.01.03.2025",
-"02.9007.01.03.2025",
-"02.7957.01.03.2025",
-"02.3872.01.03.2025",
-"02.5578.01.03.2025",
-"02.0709.01.03.2025",
-"02.2927.01.03.2025",
-"02.7022.01.03.2025",
-"02.7039.01.03.2025",
-"02.2859.01.03.2025",
-"02.6737.01.03.2025",
-"02.0958.01.03.2025",
-"02.7683.01.03.2025",
-"02.8538.01.03.2025",
-"02.5017.01.03.2025",
-"02.8821.01.03.2025",
-"02.5398.01.03.2025",
-"02.9801.01.03.2025",
-"02.0155.01.03.2025",
-"02.5582.01.03.2025",
-"02.3539.01.03.2025",
-    ];
-    const correctPassword = "DIT1";
-    function login() {
-        let reg = document.getElementById("regNumber").value;
-        let pass = document.getElementById("password").value;
-        let msg = document.getElementById("message");
+function loadDashboard(){
+    let isAdmin = localStorage.getItem("admin");
+    let content = document.getElementById("content");
 
-        if (users.includes(reg) && pass === correctPassword) {
-            document.getElementById("loginForm").style.display = "none";
-            document.getElementById("profile").style.display = "block";
-        } else {
-            msg.innerHTML = "Invalid Registration Number or Password";
-            msg.className = "error";
+    content.innerHTML = "";
+
+    if(isAdmin === "true"){
+        let students = JSON.parse(localStorage.getItem("students")) || [];
+
+        let table = `
+            <h3>All Registered Students</h3>
+            <table border="1" cellpadding="10">
+                <tr>
+                    <th>#</th>
+                    <th>First Name</th>
+                    <th>Second Name</th>
+                    <th>Last Name</th>
+                    <th>Phone</th>
+                    <th>Gender</th>
+                    <th>Email</th>
+                    <th>Nationality</th>
+                </tr>
+        `;
+
+        students.forEach((s, index) => {
+            table += `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${s.fname}</td>
+                    <td>${s.sname}</td>
+                    <td>${s.lname}</td>
+                    <td>${s.phone}</td>
+                    <td>${s.gender}</td>
+                    <td>${s.email}</td>
+                    <td>${s.nation}</td>
+                </tr>
+            `;
+        });
+
+        table += `</table>`;
+
+        content.innerHTML = table;
+
+    } else {
+        let user = JSON.parse(localStorage.getItem("currentUser"));
+
+        if(user){
+            content.innerHTML = `
+                <h3>Your Profile</h3>
+                <table border="1" cellpadding="10">
+                    <tr><th>Field</th><th>Value</th></tr>
+                    <tr><td>First Name</td><td>${user.fname}</td></tr>
+                    <tr><td>Second Name</td><td>${user.sname}</td></tr>
+                    <tr><td>Last Name</td><td>${user.lname}</td></tr>
+                    <tr><td>Phone</td><td>${user.phone}</td></tr>
+                    <tr><td>Gender</td><td>${user.gender}</td></tr>
+                    <tr><td>Email</td><td>${user.email}</td></tr>
+                    <tr><td>Nationality</td><td>${user.nation}</td></tr>
+                </table>
+            `;
         }
     }
-    
+}
+
+// Show pages
+function show(page){
+    document.querySelectorAll('.page').forEach(p => p.style.display='none');
+    document.getElementById(page).style.display='block';
+}
+
+// Start with register page
+show('register');
+
+// REGISTER
+document.getElementById("regForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    let student = {
+        fname: fname.value,
+        sname: sname.value,
+        lname: lname.value,
+        phone: phone.value,
+        gender: gender.value,
+        email: email.value,
+        nation: nation.value,
+        password: password.value
+    };
+
+    let students = JSON.parse(localStorage.getItem("students")) || [];
+    students.push(student);
+    localStorage.setItem("students", JSON.stringify(students));
+
+    alert("Registered Successfully!");
+    show('login');
+});
+
+// LOGIN
+document.getElementById("loginForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    let phone = lphone.value;
+    let pass = lpassword.value;
+
+    let students = JSON.parse(localStorage.getItem("students")) || [];
+
+    let user = students.find(s => s.phone === phone && s.password === pass);
+
+    if(user){
+        localStorage.setItem("currentUser", JSON.stringify(user));
+        loadDashboard();
+        show('dashboard');
+    } else {
+        alert("Wrong phone or password!");
+    }
+});
+
+// ADMIN LOGIN
+function adminLogin(){
+    let pass = adminPass.value;
+
+    if(pass === "sam"){
+        localStorage.setItem("admin", "true");
+        loadDashboard();
+        show('dashboard');
+    } else {
+        alert("Wrong admin password!");
+    }
+}
+
+// LOAD DASHBOARD
+function loadDashboard(){
+    let output = document.getElementById("output");
+    let isAdmin = localStorage.getItem("admin");
+
+    output.innerHTML = "";
+
+    if(isAdmin === "true"){
+        let students = JSON.parse(localStorage.getItem("students")) || [];
+
+        output.innerHTML = "<h3>My profile registered</h3>";
+
+        students.forEach(s => {
+            output.innerHTML += `
+                <p>
+                ${s.fname} ${s.sname} ${s.lname}<br>
+                Phone: ${s.phone}<br>
+                Gender: ${s.gender}<br>
+                Email: ${s.email}<br>
+                Nationality: ${s.nation}
+                </p><hr>
+            `;
+        });
+
+    } else {
+        let user = JSON.parse(localStorage.getItem("currentUser"));
+
+        output.innerHTML = `
+            <h3>Your Profile</h3>
+            ${user.fname} ${user.sname} ${user.lname}<br>
+            Phone: ${user.phone}<br>
+            Gender: ${user.gender}<br>
+            Email: ${user.email}<br>
+            Nationality: ${user.nation}
+        `;
+    }
+}
+
+// LOGOUT
+function logout(){
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("admin");
+    show('login');
+}
 </script>
-</div>
-</div></div><script>
-  function showContent(id) {
-    var content = document.getElementById(id);
-    content.classList.toggle('hidden');
-  }
- 
-</script></body>
+
+</body>
 </html>
