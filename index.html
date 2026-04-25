@@ -1,153 +1,63 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Student System</title>
-<link rel="stylesheet"href="style.css">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta charset="UTF-8">
+<title>My Profile Website</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<!-- ================= REGISTER ================= -->
-<table border="5%"cellpadding="5%"width="100%"height="100%"cellspacing="0">
-<tr>
-<td>
-<div id="register" class="page">
+<!-- Header -->
 <header>
-<h2>Registration Form</h2>
-<h4>This is example of application Register system</h4>
-<img src="logo1.jpg">
-</header></br></br></br></br>
-<form id="regForm">
-<input type="text" id="fname" placeholder="First Name"required><br>
-<input type="text" id="sname" placeholder="Second Name" required><br>
-<input type="text" id="lname" placeholder="Last Name" required><br>
-<input type="number" id="phone" placeholder="Phone Number" required><br>
-<select id="gender">
-<option>Male</option>
-<option>Female</option>
-</select>
-<br>
-<input type="email" id="email" placeholder="Email" required><br>
-<input type="text" id="nation" placeholder="Nationality" required><br>
-<input type="password" id="password" placeholder="Enter your Password" required><br>
-<button type="submit">Register</button>
+<h1>My Website</h1>
+<p>Welcome to my personal website</p>
+</header>
+<!-- Navigation -->
+<nav>
+        <a href="#about">About</a>
+        <a href="#education">Education</a>
+        <a href="#social">Social Media</a>
+        <a href="#contact">Contact</a>
+ </nav>
+ <!-- About Section -->
+ <section id="about">
+ <h2>About Me</h2>
+ <img src="my picture2.png"alt="My Photo" class="profile-img">
+<p><b>Hello! My name is Samwel. I am an IT student passionate about Information Technology.</p>
+</section>
+<!-- Education -->
+<section id="education">
+<h2>Education</h2>
+<ul>
+<li>College - CBE-MWANZA CAMPUS</li>
+Program: Diploma in Information Technology
+</ul>
+
+<img src="my picture3.jpg" alt="Education Image"class="education-img">
+</section>
+<!-- Social Media -->
+<section id="social">
+<h2>Find Me Online</h2>
+<button onclick="openFacebook()">Facebook</button>
+<button onclick="openInstagram()">Instagram</button>
+</section>
+<!-- Contact -->
+<section id="contact">
+<h2>Contact Me</h2>
+<p onclick="745375356">Phone: +255 745 375 356</p>
+<p>Email: samwelmwita062005@gmail.com</p>
+<form onsubmit="return sendMessage()">
+<input type="text" placeholder="Your Name" required><br><br>
+<input type="email" placeholder="Your Email" required><br><br>
+<textarea placeholder="Your Message"></textarea><br><br>
+<button type="submit">Send</button>
 </form>
-<p>Already registered? <button onclick="show('login')">Login</button></p>
-</div>
-<!-- ================= LOGIN ================= -->
-<div id="login" class="page">
-<h2>Login</h2>
-<form id="loginForm">
-<input type="text" id="lphone" placeholder="Phone Number" required><br>
-<input type="password" id="lpassword" placeholder="Password" required><br>
-<button type="submit">Login</button>
-</form>
-<h3>Admin Only can Login here</h3>
-<input type="password" id="adminPass" placeholder="Admin Password">
-<button onclick="adminLogin()">Admin Login</button>
-<p><button onclick="show('register')">Back</button></p>
-</div>
-<!-- ================= DASHBOARD ================= -->
-<div id="dashboard" class="page">
-    
-<div id="output"></div>
-<button onclick="logout()">Logout</button>
-</div>
-<script>
-function loadDashboard(){
-    let isAdmin = localStorage.getItem("admin");
-    let content = document.getElementById("content");
-
-    content.innerHTML = "";
-
-    if(isAdmin === "true"){
-        let students = JSON.parse(localStorage.getItem("students")) || [];
-
-        let table = `
-            <h3>All Registered Students</h3>
-            <table border="1" cellpadding="10">
-                <tr>
-                    <th>#</th>
-                    <th>First Name</th>
-                    <th>Second Name</th>
-                    <th>Last Name</th>
-                    <th>Phone</th>
-                    <th>Gender</th>
-                    <th>Email</th>
-                    <th>Nationality</th>
-                </tr>
-        `;
-
-        students.forEach((s, index) => {
-            table += `
-                <tr>
-                    <td>${index + 1}</td>
-                    <td>${s.fname}</td>
-                    <td>${s.sname}</td>
-                    <td>${s.lname}</td>
-                    <td>${s.phone}</td>
-                    <td>${s.gender}</td>
-                    <td>${s.email}</td>
-                    <td>${s.nation}</td>
-                </tr>
-            `;
-        });
-
-        table += `</table>`;
-
-        content.innerHTML = table;
-
-    } else {
-        let user = JSON.parse(localStorage.getItem("currentUser"));
-
-        if(user){
-            content.innerHTML = `
-                <h3>Your Profile</h3>
-                <table border="1" cellpadding="10">
-                    <tr><th>Field</th><th>Value</th></tr>
-                    <tr><td>First Name</td><td>${user.fname}</td></tr>
-                    <tr><td>Second Name</td><td>${user.sname}</td></tr>
-                    <tr><td>Last Name</td><td>${user.lname}</td></tr>
-                    <tr><td>Phone</td><td>${user.phone}</td></tr>
-                    <tr><td>Gender</td><td>${user.gender}</td></tr>
-                    <tr><td>Email</td><td>${user.email}</td></tr>
-                    <tr><td>Nationality</td><td>${user.nation}</td></tr>
-                </table>
-            `;
-        }
-    }
-}
-
-// Show pages
-function show(page){
-    document.querySelectorAll('.page').forEach(p => p.style.display='none');
-    document.getElementById(page).style.display='block';
-}
-
-// Start with register page
-show('register');
-
-// REGISTER
-document.getElementById("regForm").addEventListener("submit", function(e){
-    e.preventDefault();
-
-    let student = {
-        fname: fname.value,
-        sname: sname.value,
-        lname: lname.value,
-        phone: phone.value,
-        gender: gender.value,
-        email: email.value,
-        nation: nation.value,
-        password: password.value
-    };
-
-    let students = JSON.parse(localStorage.getItem("students")) || [];
-    students.push(student);
-    localStorage.setItem("students", JSON.stringify(students));
-
-    alert("Registered Successfully!");
-    show('login');
-});
+</section>
+<footer>
+<p>© 2026 My Profile</p>
+</footer>
+<script src="my website.js"></script>
+</body>
+</html>});
 
 // LOGIN
 document.getElementById("loginForm").addEventListener("submit", function(e){
