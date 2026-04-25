@@ -1,14 +1,73 @@
-body { 
-  font-family: Arial;
-  text-align:center; 
-  background:#f2f2f2;
+body {
+    font-family: Arial;
+    margin: 0;
+    background-color: #f4f4f4;
 }
-.container { 
-  background:white; 
-  padding:20px; 
-  margin:15px auto; 
-  width:300px; 
-  border-radius:10px; 
+
+header {
+    background: #0077b6;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+nav {
+    background: #023e8a;
+    text-align: center;
+    padding: 10px;
+}
+
+nav a {
+    color: white;
+    margin: 10px;
+    text-decoration: none;
+}
+
+section {
+    padding: 20px;
+    margin: 10px;
+    background: white;
+    border-radius: 10px;
+    background: linear-gradient(290deg, #95f5ff,#95f5ff, yellow);
+}
+
+ .profile-img {
+      width: 350px;
+      height: 400px;
+      border: 0px solid blue;
+      border-radius: 2%;
+    }
+
+    .education-img{
+      width: 350px;
+      height: 200px;
+      border: 0px solid red;
+      border-radius: 2%; /* makes circle */
+    }
+  img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+button {
+    padding: 10px;
+    margin: 5px;
+    background: blue;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #3bff00;
+}
+
+footer {
+    text-align: center;
+    background: #03045e;
+    color: white;
+    padding: 10px;
 }
 input, button {
   width:90%;
@@ -16,46 +75,10 @@ input, button {
   margin:5px; 
   border-radius:5px;
 }
-button { 
-  background:blue;
-  color:white;
-  border:none; 
-  width:95%;
-  border-radius:5px;
-}
-#profile, #adminPanel {
-  display:none; 
-}
-table { width:100%; 
-  margin-top:10px; 
-}
- img{
-        width: 30%;
-        height: 75%;
-        border-radius: 100%;
-    }
-     
-     header {
-     background: linear-gradient(90deg, #1e3a8a, #15f5ff);
-    color: #ffffff;
-    padding: 10px;
-    text-align: center;
-    height: 130px;
-}
-select{
-    border-weight: 5px;
-    width:95%;
+textarea{
+ width:90%;
+ height: 100px;
   padding:10px; 
   margin:5px; 
-  border-radius:5px;
-  background: white;
+  border-radius:5px;   
 }
-table{
-    border-color: blue;
-    border-radius: 2%;
-  height: 100%;
-}
-
-
-
-
