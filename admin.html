@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Registration</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+<h1>Student Registration & Login System</h1>
+
+<div class="forms">
+
+<!-- ADMIN REGISTRATION FORM -->
+<div class="card">
+    <h1>Admin Student Registration</h1>
+
+    <input type="file" id="studentImage" accept="image/*">
+
+    <input type="text" id="firstName" placeholder="First Name">
+
+    <input type="text" id="secondName" placeholder="Second Name">
+
+    <input type="text" id="lastName" placeholder="Last Name">
+
+    <input type="text" id="courseName" placeholder="Course Name">
+
+    <select id="courseLevel">
+        <option value="">Select Course Level</option>
+        <option>Certificate</option>
+        <option>Diploma</option>
+        <option>Degree</option>
+    </select>
+
+    <input type="password" id="password" placeholder="Create Password">
+
+    <button onclick="registerStudent()">Register Student</button>
+</div>
+
+
+
+  <div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Registration_Number</th>
+                <th>First_Name</th>
+                <th>Second_Name</th>
+                <th>Last_Name</th>
+                <th>Course_Name</th>
+                <th>Course_Level</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody id="studentTableBody">
+
+        </tbody>
+    </table>
+</div>
+
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>
