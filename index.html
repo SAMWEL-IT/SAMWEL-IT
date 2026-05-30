@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+<title>Student Login</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+<div class="branding-side">
+<div class="branding-content">
+<h2>SAMWEL-IT</h2>
+<p>Welcome to the Online Student Information System (OSIS).</p>
+<div class="badge">OSIS</div>
+</div>
+</div>
+<div class="form-side">
+<div class="form-container">
+<div class="form-header">
+
+</div>
+<form id="loginForm">
+<div class="card">
+<div class="input-group">
+<label for="username">Rigistration number
+</lebel>
+<br>
+<br>
+<input type="text" id="loginReg" placeholder="Enter registration Number"required>
+<span class="error-message" id="usernameError"></span>
+</div>
+<div class="input-group">
+<label for="password">Password</label>
+
+<input type="password" id="loginPassword" placeholder="Enter Password"required>
+<span class="error-message" id="loginMessage">
+</span>
+</div>
+
+ 
+<button onclick="studentLogin()"class="btn-login">Login</button>
+<br>
+<br>
+<br>
+
+<button class="btn-login1" onclick="forgotPassword()">Forgot Password
+</button>
+<div id="loginMessage"></div>
+<div class="form-footer">
+
+<p class="help-text">For technical support, contact the SAMWELT helpdesk.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<script src="student.js"></script>
+</body>
+</html>
