@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+<title>Student Login</title>
+
+</head>
+<body>
+<div class="container">
+<div class="branding-side">
+<div class="branding-content">
+<h2>SAMWEL-IT</h2>
+<p>Welcome to the Online Student Information System (OSIS).</p>
+<div class="badge">OSIS</div>
+</div>
+</div>
+<div class="form-side">
+<div class="form-container">
+<div class="form-header">
+
+</div>
+<form id="loginForm">
+<div class="card">
+<div class="input-group">
+<label for="username">Rigistration number
+</lebel>
+<br>
+<br>
+<input type="text" id="loginReg" placeholder="Enter registration Number"required>
+<span class="error-message" id="usernameError"></span>
+</div>
+<div class="input-group">
+<label for="password">Password</label>
+
+<input type="password" id="loginPassword" placeholder="Enter Password"required>
+<span class="error-message" id="loginMessage">
+</span>
+</div>
+
+ 
+<button onclick="studentLogin()"class="btn-login">Login</button>
+<br>
+<br>
+<br>
+
+<button class="btn-login1" onclick="forgotPassword()">Forgot Password
+</button>
+<div id="loginMessage"></div>
+<div class="form-footer">
+
+<p class="help-text">For technical support, contact the SAMWELT helpdesk.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+<style>
+ /* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f4f6f9;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    display: flex;
+    width: 900px;
+    height: 550px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* Left Panel - Branding */
+.branding-side {
+    
+    background: linear-gradient(135deg, #0b3c5d 0%, #1d2731s 100%);
+    background-color: #001884; /* Dark Blue */
+    color: #ffffff;
+    
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    position: relative;
+}
+
+.branding-content h2 {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    border-left: 4px solid #f9a825; /* Gold accent */
+    padding-left: 15px;
+}
+
+.branding-content p {
+    font-size: 14px;
+    color: #cbd5e1;
+    line-height: 1.6;
+}
+
+.badge {
+    display: inline-block;
+    margin-top: 20px;
+    background-color: #f9a825;
+    color: #0b3c5d;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* Right Panel - Form */
+.form-side {
+    flex: 1.2;
+    padding: 50px;
+    display: flex;
+    align-items: center;
+}
+
+.form-container {
+    width: 100%;
+}
+
+.form-header h1 {
+    font-size: 28px;
+    color: #1e293b;
+    margin-bottom: 8px;
+}
+
+.form-header p {
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 30px;
+}
+
+/* Input Fields */
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 6px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+.card input:focus {
+    outline: none;
+    border-color: #0b3c5d;
+    box-shadow: 0 0 0 3px rgba(11, 60, 93, 0.1);
+}
+
+/* Actions and Buttons */
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    margin-bottom: 25px;
+}
+
+.btn-login {
+    width: 100%;
+    padding: 12px;
+    background-color: #0b3c5d;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.btn-login1{
+ babackground-color: white;
+ width: 100%;
+    padding: 12px;
+    color: blue;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}s;: 
+}
+    poin    ter;
+ 
+}
+.btn-login:hover {
+    background-color: #07273e;
+}
+
+/* Footer / Extra Links */
+.form-footer {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 13px;
+    color: #475569;
+}
+
+.form-footer a {
+    color: #f9a825;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.help-text {
+    margin-top: 15px;
+    font-size: 11px;
+    color: #94a3b8;
+}
+
+/* Error States */
+.error-message {
+    font-size: 11px;
+    color: #ef4444;
+    display: block;
+    margin-top: 4px;
+}
+
+input.error-border {
+    border-color: #ef4444;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        width: 90%;
+        height: auto;
+    }
+    .branding-side {
+        padding: 30px;
+        text-align: center;
+    }
+    .branding-content h2 {
+        border-left: none;
+        border-bottom: 3px solid #f9a825;
+        padding-left: 0;
+        padding-bottom: 10px;
+    }
+    .form-side {
+        padding: 30px 20px;
+    }
+}
+
+ 
+ 
+ 
+</style>
+
+<script>
+ function studentLogin(){
+const reg =
+document.getElementById("loginReg").value;
+const pass =
+document.getElementById("loginPassword").value;
+const students =
+JSON.parse(localStorage.getItem("students")) || [];
+const message =
+document.getElementById("loginMessage");
+const student = students.find(
+s => s.regNumber == reg &&
+s.password == pass);
+if(!student){
+message.innerHTML =
+"<p style='color:red;'>Invalid Login</p>";
+return;
+}
+if(student.blocked){
+message.innerHTML =
+"<p style='color:orange;'>Account Blocked</p>";
+return;
+}
+// HIDE LOGIN FORM
+document.querySelector(".card").innerHTML = `
+<h2 style="text-align:center;
+        color:#1565c0;
+        margin-bottom:20px;">
+        Student Profile
+</h2>
+<table style="width:1000; border: 1px;
+background: white;text-align: left;">
+<tr>
+<td colspan="2"
+style="text-align:center;padding:20px;">
+<img src="${student.image}"
+style="width:120px;height:120px;
+                    border-radius:50%;
+                    object-fit:cover;
+                    border:4px solid #1565c0;">
+</td>
+</tr>
+<tr>
+<th>Registration Number</th>
+<td>${student.regNumber}</td>
+<hr>
+</tr>
+<tr>
+<th>First Name</th>
+<td>${student.firstName}</td>
+<hr>
+</tr>
+<tr>
+<th>Second Name</th>
+<td>${student.secondName}</td>
+</tr>
+<tr>
+<th>Last Name</th>
+<td>${student.lastName}</td>
+</tr>
+<tr>
+<th>Course Name</th>
+<td>${student.courseName}</td>
+</tr>
+<tr>
+<th>Course Level</th>
+<td>${student.courseLevel}</td>
+</tr>
+</table>
+
+                    
+<button onclick="logoutStudent()"
+    style="
+        margin-top:20px;
+        background:red;
+        color:white;
+        width:100%;
+        padding:12px;
+        border:none;
+        border-radius:5px;
+        cursor:pointer;
+        font-weight:bold;
+    ">
+        Logout
+    </button>
+
+    `;
+}
+
+// LOGOUT
+function logoutStudent(){
+
+    location.reload();
+}
+
+// FORGOT PASSWORD
+function forgotPassword(){
+alert("Contact Admin\nPhone: +255745375356");
+}
+ 
+ 
+ 
+</script>
+</body>
+</html>
