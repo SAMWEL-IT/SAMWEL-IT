@@ -1,532 +1,343 @@
-// ---------- DATA STORAGE ----------
-let students = JSON.parse(localStorage.getItem("students")) || [];
-let currentLoggedStudent = JSON.parse(sessionStorage.getItem("loggedStudent")) || null;
-let adminLogged = sessionStorage.getItem("adminLogged") === "true";
+// --- APPLICATION MEMORY MANAGEMENT SYSTEM (STATE) ---
+let students = JSON.parse(localStorage.getItem('students')) || [];
+let loggedInUser = JSON.parse(localStorage.getItem('loggedInUser')) || null;
+let currentProfileImageBase64 = "";
 
-function saveStudents() {
-    localStorage.setItem("students", JSON.stringify(students));
+// Master Admin Access Credentials
+const ADMIN_CREDENTIALS = { username: "samwel", password: "1234" };
+
+// --- RUN SYSTEM CONTROLLERS ON STARTUP ---
+document.addEventListener("DOMContentLoaded", () => {
+    setupSidebarEvents();
+    checkLoginState();
+    renderAdminTable();
+});
+
+// --- TOGGLE INTERACTIVE RUNSIDEBAR (3-LINE BAR MANAGEMENT) ---
+function setupSidebarEvents() {
+    const sidebar = document.getElementById("sidebar");
+    const toggleBtn = document.getElementById("toggleSidebar");
+    const closeBtn = document.getElementById("closeSidebar");
+
+    toggleBtn.addEventListener("click", () => sidebar.classList.add("active"));
+    closeBtn.addEventListener("click", () => sidebar.classList.remove("active"));
 }
 
-function generateRegNumber() {
-    let lastId = 0;
-    students.forEach(s => {
-        let parts = s.regNumber.split("/");
-        if(parts.length === 3) {
-            let num = parseInt(parts[2]);
-            if(!isNaN(num) && num > lastId) lastId = num;
-        }
-    });
-    let newNum = (lastId + 1).toString().padStart(4, "0");
-    return `SMT/2025/${newNum}`;
-}
+// --- DYNAMIC LAYER ENGINE (PAGE CONTROL SYSTEM) ---
+function switchPage(pageId) {
+    document.querySelectorAll(".page-section").forEach(sec => sec.classList.remove("active"));
+    document.querySelectorAll(".menu-item").forEach(item => item.classList.remove("active"));
 
-// RENDER APP MAIN
-function renderApp() {
-    const container = document.getElementById("pageContainer");
-    const topBar = document.getElementById("topBar");
-    const sidebar = document.getElementById("studentSidebar");
-    const menuToggle = document.getElementById("menuToggleBtn");
-
-    if (adminLogged) {
-        topBar.style.display = "flex";
-        if (menuToggle) menuToggle.style.display = "none";
-        sidebar.classList.remove("open");
-        container.innerHTML = renderAdminPanel();
-        attachAdminEvents();
-    } 
-    else if (currentLoggedStudent) {
-        topBar.style.display = "flex";
-        if (menuToggle) menuToggle.style.display = "block";
-        const activeNav = document.querySelector(".side-nav-btn.active")?.getAttribute("data-student-nav") || "home";
-        container.innerHTML = renderStudentContent(activeNav);
-        attachStudentSidebarEvents();
-    } 
-    else {
-        topBar.style.display = "none";
-        sidebar.classList.remove("open");
-        container.innerHTML = renderHomepage();
-        attachHomepageEvents();
+    if(pageId === 'home') document.getElementById("homePage").classList.add("active");
+    if(pageId === 'register') {
+        document.getElementById("registerPage").classList.add("active");
+        toggleAuthBoxes('register');
     }
-}
-
-// ---------- HOMEPAGE ----------
-function renderHomepage() {
-    return `
-        <div class="card" style="text-align:center;">
-            <h1>🎓 Smart Student Portal</h1>
-            <p style="margin:20px 0;">Advanced Management System</p>
-            <div style="display:flex; gap:20px; justify-content:center; flex-wrap:wrap;">
-                <button id="goToRegisterBtn" style="background:#10b981;">📝 Register</button>
-                <button id="goToLoginBtn" style="background:#3b82f6;">🔐 Student Login</button>
-                <button id="goToAdminLoginBtn" style="background:#8b5cf6;">👑 Admin Login</button>
-            </div>
-        </div>
-        <div id="authFormsContainer"></div>
-    `;
-}
-
-function attachHomepageEvents() {
-    const regBtn = document.getElementById("goToRegisterBtn");
-    const loginBtn = document.getElementById("goToLoginBtn");
-    const adminBtn = document.getElementById("goToAdminLoginBtn");
-    const containerDiv = document.getElementById("authFormsContainer");
+    if(pageId === 'admin') {
+        document.getElementById("adminPage").classList.add("active");
+        renderAdminTable();
+    }
+    if(pageId === 'profile') {
+        document.getElementById("profilePage").classList.add("active");
+        populateProfileFields();
+    }
     
-    if (regBtn) {
-        regBtn.onclick = () => {
-            containerDiv.innerHTML = renderRegisterForm();
-            attachRegisterEvents();
-        };
-    }
-    if (loginBtn) {
-        loginBtn.onclick = () => {
-            containerDiv.innerHTML = renderStudentLoginForm();
-            attachStudentLoginEvents();
-        };
-    }
-    if (adminBtn) {
-        adminBtn.onclick = () => {
-            containerDiv.innerHTML = renderAdminLoginForm();
-            attachAdminLoginEvents();
-        };
-    }
+    // Auto-collapse navigation sidebar frame when running on mobile Viewports
+    document.getElementById("sidebar").classList.remove("active");
 }
 
-// REGISTER FORM
-function renderRegisterForm() {
-    return `
-        <div class="card">
-            <h2>📝 Student Registration</h2>
-            <div class="form-grid">
-                <div class="input-group"><label>🖼️ Image URL</label><input type="text" id="regImage" placeholder="https://randomuser.me/api/portraits/women/1.jpg" value="https://randomuser.me/api/portraits/men/1.jpg"></div>
-                <div class="input-group"><label>First Name *</label><input id="regFname" placeholder="John"></div>
-                <div class="input-group"><label>Second Name</label><input id="regSname" placeholder="Michael"></div>
-                <div class="input-group"><label>Last Name *</label><input id="regLname" placeholder="Doe"></div>
-                <div class="input-group"><label>Phone</label><input id="regPhone" placeholder="+255712345678"></div>
-                <div class="input-group"><label>Email (Google) *</label><input id="regEmail" placeholder="student@gmail.com"></div>
-                <div class="input-group"><label>Course Level (4-9)</label><select id="regLevel"><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option></select></div>
-            </div>
-            <button id="registerBtn" style="background:#10b981; margin-top:15px;">✅ Register & Get Reg Number</button>
-            <p id="regResult" style="margin-top:15px; font-weight:bold;"></p>
-        </div>
-    `;
+function toggleAuthBoxes(boxType) {
+    document.getElementById("registerBox").style.display = boxType === 'register' ? 'block' : 'none';
+    document.getElementById("loginBox").style.display = boxType === 'login' ? 'block' : 'none';
+    document.getElementById("successRegBox").style.display = 'none';
 }
 
-function attachRegisterEvents() {
-    const registerBtn = document.getElementById("registerBtn");
-    if (!registerBtn) return;
+function openLoginModal() {
+    switchPage('register');
+    toggleAuthBoxes('login');
+}
+
+// --- IMAGE PIPELINE STREAM (CONVERT UPLOADS INTO PERSISTENT BASE64 STRINGS) ---
+function previewImage(event) {
+    const reader = new FileReader();
+    reader.onload = function() {
+        const preview = document.getElementById('avatarPreview');
+        preview.style.backgroundImage = `url(${reader.result})`;
+        preview.innerHTML = ""; // Remove icon elements completely
+        currentProfileImageBase64 = reader.result;
+    }
+    reader.readAsDataURL(event.target.files[0]);
+}
+
+// --- ACCOUNT REGISTRATION REGISTRY ---
+function handleRegister(event) {
+    event.preventDefault();
+
+    // Unique Registration Numbers generation, Format string: REG-2026-[Random4Digits]
+    const randNum = Math.floor(1000 + Math.random() * 9000);
+    const regNumber = `REG-2026-${randNum}`;
+
+    const newStudent = {
+        regNumber: regNumber,
+        firstName: document.getElementById("firstName").value,
+        middleName: document.getElementById("middleName").value,
+        lastName: document.getElementById("lastName").value,
+        phone: document.getElementById("phone").value,
+        email: document.getElementById("email").value,
+        courseLevel: document.getElementById("courseLevel").value,
+        password: document.getElementById("regPassword").value,
+        image: currentProfileImageBase64 || "https://via.placeholder.com/150",
+        status: "Active"
+    };
+
+    students.push(newStudent);
+    localStorage.setItem('students', JSON.stringify(students));
+
+    // Hide standard forms, execute target presentation modal showing system generation output
+    document.getElementById("registerBox").style.display = "none";
+    document.getElementById("successRegBox").style.display = "block";
+    document.getElementById("generatedRegNum").innerText = regNumber;
+
+    // Reset standard input vectors
+    document.getElementById("regForm").reset();
+    document.getElementById('avatarPreview').style.backgroundImage = "none";
+    document.getElementById('avatarPreview').innerHTML = `<i class="fas fa-camera"></i><span>Upload Photo</span>`;
+    currentProfileImageBase64 = "";
+}
+
+// --- SECURE AUTHORIZATION AUTH SIGN IN ---
+function handleLogin(event) {
+    event.preventDefault();
+    const userInp = document.getElementById("loginRegNum").value.trim();
+    const passInp = document.getElementById("loginPassword").value;
+
+    // Validate Admin Accounts 
+    if(userInp === ADMIN_CREDENTIALS.username && passInp === ADMIN_CREDENTIALS.password) {
+        loggedInUser = { role: "admin", name: "System Administrator" };
+        localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+        checkLoginState();
+        switchPage('admin');
+        return;
+    }
+
+    // Validate Standard Registered Student Accounts 
+    const student = students.find(s => s.regNumber === userInp && s.password === passInp);
     
-    registerBtn.onclick = () => {
-        const image = document.getElementById("regImage").value || "https://randomuser.me/api/portraits/men/1.jpg";
-        const fname = document.getElementById("regFname").value.trim();
-        const sname = document.getElementById("regSname").value.trim();
-        const lname = document.getElementById("regLname").value.trim();
-        const phone = document.getElementById("regPhone").value.trim();
-        const email = document.getElementById("regEmail").value.trim();
-        const level = document.getElementById("regLevel").value;
-        
-        if (!fname || !lname || !email || !email.includes("@gmail.com")) {
-            document.getElementById("regResult").innerHTML = "❌ Error: First name, Last name, and valid Gmail required!";
+    if(student) {
+        if(student.status === "Blocked") {
+            alert("🚫 Account Access Suspended! Your account has been blocked by the System Administrator.");
             return;
         }
-        
-        const newReg = generateRegNumber();
-        const defaultPass = "pass123";
-        const newStudent = {
-            regNumber: newReg,
-            password: defaultPass,
-            firstName: fname,
-            secondName: sname,
-            lastName: lname,
-            phone: phone,
-            email: email,
-            level: level,
-            image: image,
-            isBlocked: false,
-            results: { semester1: "GPA 3.8 (B+)", semester2: "GPA 3.9 (A-)" },
-            payments: "✅ Fully Paid - No Arrears",
-            accountStatus: "Active"
-        };
-        
-        students.push(newStudent);
-        saveStudents();
-        
-        document.getElementById("regResult").innerHTML = `
-            ✅ Registration Successful!<br>
-            🆔 Reg Number: <strong>${newReg}</strong><br>
-            🔑 Default Password: <strong>${defaultPass}</strong><br><br>
-            <button id="gotoLoginAfterReg" style="background:#3b82f6;">🔐 Go to Login Page</button>
-        `;
-        
-        const gotoBtn = document.getElementById("gotoLoginAfterReg");
-        if (gotoBtn) {
-            gotoBtn.onclick = () => {
-                const containerDiv = document.getElementById("authFormsContainer");
-                containerDiv.innerHTML = renderStudentLoginForm();
-                attachStudentLoginEvents();
-            };
-        }
-    };
-}
-
-// STUDENT LOGIN
-function renderStudentLoginForm() {
-    return `
-        <div class="card">
-            <h2>🔐 Student Login</h2>
-            <div class="input-group"><label>Reg Number</label><input id="loginReg" placeholder="e.g SMT/2025/0001"></div>
-            <div class="input-group"><label>Password</label><input id="loginPass" type="password" placeholder="Password"></div>
-            <button id="doStudentLogin" style="background:#3b82f6; width:100%;">Login</button>
-            <p id="loginMsg" style="color:red; margin-top:10px;"></p>
-            <button id="forgotPassBtn" style="background:#6b7280; margin-top:10px;">🔑 Forgot Password?</button>
-        </div>
-    `;
-}
-
-function attachStudentLoginEvents() {
-    const loginBtn = document.getElementById("doStudentLogin");
-    if (!loginBtn) return;
-    
-    loginBtn.onclick = () => {
-        const reg = document.getElementById("loginReg").value;
-        const pass = document.getElementById("loginPass").value;
-        const student = students.find(s => s.regNumber === reg && s.password === pass);
-        
-        if (student) {
-            if (student.isBlocked) {
-                document.getElementById("loginMsg").innerText = "⛔ Account is BLOCKED. Contact admin.";
-                return;
-            }
-            currentLoggedStudent = student;
-            sessionStorage.setItem("loggedStudent", JSON.stringify(student));
-            adminLogged = false;
-            sessionStorage.removeItem("adminLogged");
-            renderApp();
-        } else {
-            document.getElementById("loginMsg").innerText = "❌ Invalid Reg Number or Password";
-        }
-    };
-    
-    const forgotBtn = document.getElementById("forgotPassBtn");
-    if (forgotBtn) {
-        forgotBtn.onclick = () => {
-            const reg = document.getElementById("loginReg").value;
-            const student = students.find(s => s.regNumber === reg);
-            if (student && student.email) {
-                const newPass = Math.random().toString(36).slice(2, 10);
-                student.password = newPass;
-                saveStudents();
-                alert(`📧 System sent new password to ${student.email}\n🔐 New Password: ${newPass} (Demo)`);
-                console.log(`[EMAIL SIMULATION] To: ${student.email} | New Password: ${newPass}`);
-                document.getElementById("loginMsg").innerHTML = "✅ Password reset. Check email/console for new password.";
-            } else {
-                document.getElementById("loginMsg").innerText = "❌ Reg Number not found";
-            }
-        };
+        loggedInUser = { role: "student", data: student };
+        localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+        checkLoginState();
+        switchPage('profile');
+    } else {
+        alert("❌ Credentials Mismatch! The registration number or password input is incorrect.");
     }
 }
 
-// ADMIN LOGIN
-function renderAdminLoginForm() {
-    return `
-        <div class="card">
-            <h2>👑 Admin Login</h2>
-            <div class="input-group"><label>Admin Password</label><input id="adminPass" type="password" placeholder="Enter admin password"></div>
-            <button id="adminLoginBtn" style="background:#8b5cf6; width:100%;">Login as Admin</button>
-            <p id="adminMsg" style="color:red; margin-top:10px;"></p>
-            <p style="margin-top:15px; font-size:12px;">Demo Password: <strong>admin123</strong></p>
-        </div>
-    `;
+// --- PASSWORD AUTOMATED FORWARD RECOVERY ---
+function handleForgotPassword() {
+    const regNum = prompt("Please enter your Registration Number to request an automated password reset:");
+    if(!regNum) return;
+
+    const student = students.find(s => s.regNumber === regNum.trim());
+    if(student) {
+        const autoPass = Math.random().toString(36).slice(-6);
+        student.password = autoPass;
+        localStorage.setItem('students', JSON.stringify(students));
+        
+        // Simulating background automated SMTP server responses
+        alert(`📧 System Dispatch: A new system-generated password has been sent automatically to the registered address (${student.email}).\n\nYour Temporary Password is: ${autoPass}`);
+    } else {
+        alert("❌ Target registration token data record not detected inside current environment.");
+    }
 }
 
-function attachAdminLoginEvents() {
-    const adminBtn = document.getElementById("adminLoginBtn");
-    if (!adminBtn) return;
-    
-    adminBtn.onclick = () => {
-        const pass = document.getElementById("adminPass").value;
-        if (pass === "admin123") {
-            adminLogged = true;
-            sessionStorage.setItem("adminLogged", "true");
-            currentLoggedStudent = null;
-            sessionStorage.removeItem("loggedStudent");
-            renderApp();
+// --- STATE MANAGEMENT TRACKER & UI SYNCING ---
+function checkLoginState() {
+    const statusDiv = document.getElementById("userNavStatus");
+    const sideProfile = document.getElementById("sideProfileLink");
+    const sideAdmin = document.getElementById("sideAdminLink");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    if(loggedInUser) {
+        logoutBtn.style.display = "block";
+        if(loggedInUser.role === 'admin') {
+            statusDiv.innerHTML = `<span>Welcome, <b>Admin</b></span>`;
+            sideAdmin.style.display = "block";
+            sideProfile.style.display = "none";
         } else {
-            document.getElementById("adminMsg").innerText = "❌ Wrong admin password";
+            statusDiv.innerHTML = `<span>Student: <b>${loggedInUser.data.firstName}</b></span>`;
+            sideAdmin.style.display = "none";
+            sideProfile.style.display = "block";
         }
-    };
+    } else {
+        statusDiv.innerHTML = `<button class="btn btn-primary" onclick="switchPage('register')">Get Started</button>`;
+        sideAdmin.style.display = "none";
+        sideProfile.style.display = "none";
+        logoutBtn.style.display = "none";
+    }
 }
 
-// ADMIN PANEL
-function renderAdminPanel() {
-    let html = `
-        <div class="card">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h2>👑 Admin Dashboard</h2>
-                <button id="adminLogoutBtn" style="background:#ef4444;">🚪 Logout Admin</button>
-            </div>
-            <div style="overflow-x:auto; margin-top:20px;">
-                <table class="admin-table">
-                    <thead>
-                        <tr><th>Reg No</th><th>Image</th><th>Full Name</th><th>Email</th><th>Level</th><th>Status</th><th>Actions</th></tr>
-                    </thead>
-                    <tbody>
-    `;
+function logout() {
+    loggedInUser = null;
+    localStorage.removeItem('loggedInUser');
+    checkLoginState();
+    switchPage('home');
+}
+
+// --- PROFILE MULTI-TAB DISPLAY INTERFACE CONTROLLER ---
+function switchProfileSubTab(tabId) {
+    document.querySelectorAll(".sub-tab-content").forEach(c => c.classList.remove("active"));
+    document.querySelectorAll(".prof-tab-btn").forEach(b => b.classList.remove("active"));
+
+    document.getElementById(`profTab-${tabId}`).classList.add("active");
+    event.currentTarget.classList.add("active");
+}
+
+function populateProfileFields() {
+    if(!loggedInUser || loggedInUser.role !== 'student') return;
+    const s = loggedInUser.data;
+
+    document.getElementById("profCardImage").src = s.image;
+    document.getElementById("profCardName").innerText = `${s.firstName} ${s.lastName}`;
+    document.getElementById("profCardReg").innerText = s.regNumber;
     
-    students.forEach((s, idx) => {
-        html += `
-            <tr>
-                <td><strong>${s.regNumber}</strong></td>
-                <td><img src="${s.image}" width="45" style="border-radius:50%; object-fit:cover;"></td>
-                <td>${s.firstName} ${s.lastName}</td>
-                <td>${s.email}</td>
-                <td>Level ${s.level}</td>
-                <td>${s.isBlocked ? "<span class='badge-blocked'>⛔ BLOCKED</span>" : "✅ Active"}</td>
-                <td>
-                    <button class="adminEditBtn" data-idx="${idx}" style="background:#f59e0b; margin:2px;">✏️ Edit</button>
-                    <button class="adminChangePassBtn" data-idx="${idx}" style="background:#3b82f6; margin:2px;">🔑 Pass</button>
-                    <button class="adminBlockBtn" data-idx="${idx}" style="background:${s.isBlocked ? '#10b981' : '#ef4444'}; margin:2px;">${s.isBlocked ? "Unblock" : "🚫 Block"}</button>
-                    <button class="adminDeleteBtn" data-idx="${idx}" style="background:#6b7280; margin:2px;">🗑️ Delete</button>
-                </td>
-            </tr>
-        `;
-    });
+    const statusCard = document.getElementById("profCardStatus");
+    statusCard.innerText = s.status;
+    statusCard.className = `status-badge ${s.status.toLowerCase()}`;
+
+    document.getElementById("editFirstName").value = s.firstName;
+    document.getElementById("editLastName").value = s.lastName;
+    document.getElementById("editEmail").value = s.email;
+    document.getElementById("editPhone").value = s.phone;
+}
+
+// Students modifying their own profile parameters
+function handleStudentUpdate(event) {
+    event.preventDefault();
+    const currentReg = loggedInUser.data.regNumber;
     
+    const idx = students.findIndex(st => st.regNumber === currentReg);
+    if(idx !== -1) {
+        students[idx].firstName = document.getElementById("editFirstName").value;
+        students[idx].lastName = document.getElementById("editLastName").value;
+        students[idx].email = document.getElementById("editEmail").value;
+        students[idx].phone = document.getElementById("editPhone").value;
+
+        loggedInUser.data = students[idx];
+        localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+        localStorage.setItem('students', JSON.stringify(students));
+        
+        alert("✅ Success! Your personal records profile parameters have been updated.");
+        populateProfileFields();
+    }
+}
+
+// Student Changing Password Entry Vector
+function handleStudentPasswordChange(event) {
+    event.preventDefault();
+    const oldP = document.getElementById("oldPass").value;
+    const newP = document.getElementById("newPass").value;
+    const currentReg = loggedInUser.data.regNumber;
+
+    const idx = students.findIndex(st => st.regNumber === currentReg);
+    if(idx !== -1 && students[idx].password === oldP) {
+        students[idx].password = newP;
+        loggedInUser.data.password = newP;
+        localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+        localStorage.setItem('students', JSON.stringify(students));
+        alert("✅ Security verification passed! Account Password updated successfully.");
+        event.target.reset();
+    } else {
+        alert("❌ Authentication Failed! Current security passphrase input matches nothing.");
+    }
+}
+
+// --- ADMINISTRATIVE DATA MATRIX OPERATORS (ADMIN CRUD PANEL) ---
+function renderAdminTable() {
+    const tbody = document.getElementById("adminStudentsTable");
+    if(!tbody) return;
+    tbody.innerHTML = "";
+
     if(students.length === 0) {
-        html += `<tr><td colspan="7" style="text-align:center;">No students registered yet</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted);">No student user profile data currently initialized in database context.</td></tr>`;
+        return;
     }
-    
-    html += `</tbody></table></div></div>`;
-    return html;
-}
 
-function attachAdminEvents() {
-    const logoutBtn = document.getElementById("adminLogoutBtn");
-    if (logoutBtn) {
-        logoutBtn.onclick = () => {
-            adminLogged = false;
-            sessionStorage.removeItem("adminLogged");
-            renderApp();
-        };
-    }
-    
-    document.querySelectorAll(".adminEditBtn").forEach(btn => {
-        btn.onclick = () => {
-            const idx = btn.getAttribute("data-idx");
-            const newName = prompt("Enter new First Name:", students[idx].firstName);
-            if (newName) {
-                students[idx].firstName = newName;
-                saveStudents();
-                renderApp();
-            }
-        };
-    });
-    
-    document.querySelectorAll(".adminChangePassBtn").forEach(btn => {
-        btn.onclick = () => {
-            const idx = btn.getAttribute("data-idx");
-            const newPass = prompt("Enter new password for " + students[idx].firstName);
-            if (newPass) {
-                students[idx].password = newPass;
-                saveStudents();
-                alert(`✅ Password changed! New password sent to ${students[idx].email} (Demo)`);
-                console.log(`📧 Email to ${students[idx].email}: New password = ${newPass}`);
-                renderApp();
-            }
-        };
-    });
-    
-    document.querySelectorAll(".adminBlockBtn").forEach(btn => {
-        btn.onclick = () => {
-            const idx = btn.getAttribute("data-idx");
-            students[idx].isBlocked = !students[idx].isBlocked;
-            saveStudents();
-            renderApp();
-        };
-    });
-    
-    document.querySelectorAll(".adminDeleteBtn").forEach(btn => {
-        btn.onclick = () => {
-            const idx = btn.getAttribute("data-idx");
-            if (confirm(`Delete student ${students[idx].firstName} ${students[idx].lastName}?`)) {
-                students.splice(idx, 1);
-                saveStudents();
-                renderApp();
-            }
-        };
+    students.forEach((s, index) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td><img src="${s.image}" class="table-img" alt="avatar"></td>
+            <td><b>${s.regNumber}</b></td>
+            <td>${s.firstName} ${s.lastName}</td>
+            <td>${s.email}</td>
+            <td>${s.courseLevel}</td>
+            <td><span class="status-badge ${s.status.toLowerCase()}">${s.status}</span></td>
+            <td>
+                <button class="btn btn-secondary" onclick="adminModifyStudentName('${s.regNumber}')" style="padding:5px 10px; font-size:12px;"><i class="fas fa-user-edit"></i> Edit Name</button>
+                <button class="btn btn-secondary" onclick="adminResetStudentPassword('${s.regNumber}')" style="padding:5px 10px; font-size:12px; background:#fef3c7; color:#d97706;"><i class="fas fa-key"></i> Reset Pass</button>
+                <button class="btn ${s.status === 'Active' ? 'btn-danger' : 'btn-success'}" onclick="adminToggleBlockStatus('${s.regNumber}')" style="padding:5px 10px; font-size:12px;">
+                    ${s.status === 'Active' ? '🚫 Block' : '✓ Unblock'}
+                </button>
+                <button class="btn btn-danger" onclick="adminDeleteStudent(${index})" style="padding:5px 10px; font-size:12px;"><i class="fas fa-trash-alt"></i> Delete</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
     });
 }
 
-// STUDENT CONTENT (Dashboard)
-function renderStudentContent(section) {
-    const student = currentLoggedStudent;
-    if (!student) return "<div class='card'>Please login first</div>";
+function adminModifyStudentName(regNum) {
+    const student = students.find(s => s.regNumber === regNum);
+    if(!student) return;
     
-    if (section === "home") {
-        return `
-            <div class="card">
-                <h2>🏠 Welcome, ${student.firstName} ${student.lastName}!</h2>
-                <p>📌 Reg Number: <strong>${student.regNumber}</strong> | Level: ${student.level}</p>
-                <p>📧 ${student.email}</p>
-                <hr style="margin:20px 0;">
-                <button id="viewProfileBtn" style="background:#10b981;">👤 View Full Profile</button>
-            </div>
-        `;
-    }
+    const newFirstName = prompt(`Modify First Name for ${student.firstName}:`, student.firstName);
+    const newLastName = prompt(`Modify Last Name for ${student.lastName}:`, student.lastName);
     
-    if (section === "profile") {
-        return `
-            <div class="card">
-                <h2>👤 My Profile</h2>
-                <div style="display:flex; gap:20px; flex-wrap:wrap;">
-                    <img src="${student.image}" width="120" style="border-radius:50%;">
-                    <div>
-                        <p><strong>🆔 Reg Number:</strong> ${student.regNumber}</p>
-                        <p><strong>📛 First Name:</strong> ${student.firstName}</p>
-                        <p><strong>📛 Second Name:</strong> ${student.secondName || "-"}</p>
-                        <p><strong>📛 Last Name:</strong> ${student.lastName}</p>
-                        <p><strong>📞 Phone:</strong> ${student.phone || "-"}</p>
-                        <p><strong>📧 Email:</strong> ${student.email}</p>
-                        <p><strong>🎓 Level:</strong> ${student.level}</p>
-                    </div>
-                </div>
-                <div style="margin-top:20px;">
-                    <button id="editProfileBtn" style="background:#f59e0b;">✏️ Edit Profile</button>
-                    <button id="changePassStudentBtn" style="background:#3b82f6;">🔑 Change Password</button>
-                </div>
-            </div>
-        `;
-    }
-    
-    if (section === "account") {
-        return `
-            <div class="card">
-                <h2>🛡️ Account Status</h2>
-                <p>✅ Status: <strong>${student.isBlocked ? "⛔ BLOCKED" : "Active ✅"}</strong></p>
-                <p>🔐 Last Login: Today at ${new Date().toLocaleTimeString()}</p>
-                <p>📅 Registration Date: ${new Date().toDateString()}</p>
-            </div>
-        `;
-    }
-    
-    if (section === "results") {
-        return `
-            <div class="card">
-                <h2>📊 Semester Results</h2>
-                <table class="admin-table">
-                    <tr><th>Semester</th><th>GPA</th><th>Grade</th></tr>
-                    <tr><td>Semester 1</td><td>${student.results?.semester1 || "3.8"}</td><td>B+</td></tr>
-                    <tr><td>Semester 2</td><td>${student.results?.semester2 || "3.9"}</td><td>A-</td></tr>
-                </table>
-            </div>
-        `;
-    }
-    
-    if (section === "payments") {
-        return `
-            <div class="card">
-                <h2>💰 Financial Payments</h2>
-                <p>${student.payments || "✅ All fees paid. No outstanding balance."}</p>
-                <hr>
-                <p>Tuition: Fully Cleared</p>
-                <p>Library Fee: Paid</p>
-            </div>
-        `;
-    }
-    
-    return `<div class="card">Page not found</div>`;
-}
-
-function attachStudentSidebarEvents() {
-    const toggleBtn = document.getElementById("menuToggleBtn");
-    const sidebar = document.getElementById("studentSidebar");
-    const closeBtn = document.getElementById("closeSidebarBtn");
-    
-    if (toggleBtn) {
-        toggleBtn.onclick = () => sidebar.classList.add("open");
-    }
-    if (closeBtn) {
-        closeBtn.onclick = () => sidebar.classList.remove("open");
-    }
-    
-    document.querySelectorAll(".side-nav-btn").forEach(btn => {
-        btn.onclick = (e) => {
-            document.querySelectorAll(".side-nav-btn").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            const nav = btn.getAttribute("data-student-nav");
-            const container = document.getElementById("pageContainer");
-            container.innerHTML = renderStudentContent(nav);
-            attachStudentDynamicButtons();
-            sidebar.classList.remove("open");
-        };
-    });
-    
-    const logoutStudent = document.getElementById("studentLogoutBtn");
-    if (logoutStudent) {
-        logoutStudent.onclick = () => {
-            currentLoggedStudent = null;
-            sessionStorage.removeItem("loggedStudent");
-            renderApp();
-        };
-    }
-    
-    attachStudentDynamicButtons();
-}
-
-function attachStudentDynamicButtons() {
-    const editBtn = document.getElementById("editProfileBtn");
-    if (editBtn) {
-        editBtn.onclick = () => {
-            const newFirstName = prompt("New First Name:", currentLoggedStudent.firstName);
-            if (newFirstName) currentLoggedStudent.firstName = newFirstName;
-            
-            const newEmail = prompt("New Email (must be @gmail.com):", currentLoggedStudent.email);
-            if (newEmail && newEmail.includes("@gmail.com")) currentLoggedStudent.email = newEmail;
-            
-            const newPhone = prompt("New Phone:", currentLoggedStudent.phone);
-            if (newPhone) currentLoggedStudent.phone = newPhone;
-            
-            const idx = students.findIndex(s => s.regNumber === currentLoggedStudent.regNumber);
-            if (idx !== -1) {
-                students[idx] = currentLoggedStudent;
-                saveStudents();
-                sessionStorage.setItem("loggedStudent", JSON.stringify(currentLoggedStudent));
-            }
-            renderApp();
-            alert("✅ Profile updated!");
-        };
-    }
-    
-    const changePassBtn = document.getElementById("changePassStudentBtn");
-    if (changePassBtn) {
-        changePassBtn.onclick = () => {
-            const oldPass = prompt("Enter current password:");
-            if (oldPass === currentLoggedStudent.password) {
-                const newPass = prompt("Enter new password:");
-                if (newPass) {
-                    currentLoggedStudent.password = newPass;
-                    const idx = students.findIndex(s => s.regNumber === currentLoggedStudent.regNumber);
-                    if (idx !== -1) {
-                        students[idx] = currentLoggedStudent;
-                        saveStudents();
-                        sessionStorage.setItem("loggedStudent", JSON.stringify(currentLoggedStudent));
-                        alert("✅ Password changed successfully!");
-                        renderApp();
-                    }
-                }
-            } else {
-                alert("❌ Wrong current password!");
-            }
-        };
-    }
-    
-    const viewProfileBtn = document.getElementById("viewProfileBtn");
-    if (viewProfileBtn) {
-        viewProfileBtn.onclick = () => {
-            const profileBtn = document.querySelector(".side-nav-btn[data-student-nav='profile']");
-            if (profileBtn) profileBtn.click();
-        };
+    if(newFirstName && newLastName) {
+        student.firstName = newFirstName;
+        student.lastName = newLastName;
+        localStorage.setItem('students', JSON.stringify(students));
+        renderAdminTable();
+        alert("✅ Student structural profile name updated by Admin.");
     }
 }
 
-// INITIAL RENDER
-renderApp();
+function adminResetStudentPassword(regNum) {
+    const student = students.find(s => s.regNumber === regNum);
+    if(!student) return;
+
+    const newPass = prompt(`Assign a new operational password for ${student.firstName}:`);
+    if(newPass) {
+        student.password = newPass;
+        localStorage.setItem('students', JSON.stringify(students));
+        renderAdminTable();
+        
+        // Emulated background notification engine triggered by Admin Override actions
+        alert(`📧 Dispatch System Alert: Account operational password overwritten by Admin permissions.\n\nThe system has transmitted the update automatically to student inbox via: ${student.email}`);
+    }
+}
+
+function adminToggleBlockStatus(regNum) {
+    const student = students.find(s => s.regNumber === regNum);
+    if(!student) return;
+
+    student.status = student.status === "Active" ? "Blocked" : "Active";
+    localStorage.setItem('students', JSON.stringify(students));
+    renderAdminTable();
+    alert(`Account status updated to: ${student.status}`);
+}
+
+function adminDeleteStudent(index) {
+    if(confirm("CRITICAL CRITERIA RISK WARNING: Are you completely certain you want to purge this record profile completely from the system state engine memory storage? This cannot be undone.")) {
+        students.splice(index, 1);
+        localStorage.setItem('students', JSON.stringify(students));
+        renderAdminTable();
+        alert("💥 Student account permanently erased from system records matrix.");
+    }
+}
+
+
+
