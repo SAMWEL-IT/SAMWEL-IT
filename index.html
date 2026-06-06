@@ -1,483 +1,61 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Registration</title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Smart Student Portal | Advanced System</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome (icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="container"id="valueContent">
 
-<h1>Student Registration & Login System</h1>
+<div class="app-wrapper" id="app">
+    <!-- SIDEBAR / DASHBOARD (for student) - initially hidden -->
+    <aside class="student-sidebar" id="studentSidebar">
+        <div class="sidebar-header">
+            <h3>Student Panel</h3>
+            <button id="closeSidebarBtn"><i class="fas fa-times"></i></button>
+        </div>
+        <nav class="sidebar-nav">
+            <button class="side-nav-btn active" data-student-nav="home"><i class="fas fa-home"></i> Home</button>
+            <button class="side-nav-btn" data-student-nav="profile"><i class="fas fa-user-circle"></i> Profile Details</button>
+            <button class="side-nav-btn" data-student-nav="account"><i class="fas fa-shield-alt"></i> Account Status</button>
+            <button class="side-nav-btn" data-student-nav="results"><i class="fas fa-chart-line"></i> Semester Results</button>
+            <button class="side-nav-btn" data-student-nav="payments"><i class="fas fa-credit-card"></i> Financial Payments</button>
+            <button class="side-nav-btn logout-btn" id="studentLogoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </nav>
+    </aside>
 
-<div class="forms">
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <!-- Top Bar for student dashboard (3 lines menu) -->
+        <div class="top-bar" id="topBar">
+            <button id="menuToggleBtn" class="menu-toggle"><i class="fas fa-bars"></i></button>
+            <h2 id="pageTitle">Student Management System</h2>
+            <div class="top-right"></div>
+        </div>
 
-<!-- REGISTRATION FORM -->
-<div class="card">
-<h1>Student Registration Form</h1>
-<input type="file" id="studentImage" accept="image/*">
+        <!-- Dynamic pages container -->
+        <div id="pageContainer" class="page-container">
+            <!-- Homepage content will load here -->
+        </div>
 
-    <input type="text" id="firstName" placeholder="First Name">
-
-    <input type="text" id="secondName" placeholder="Second Name">
-
-    <input type="text" id="lastName" placeholder="Last Name">
-
-    <input type="text" id="courseName" placeholder="Course Name">
-
-    <select id="courseLevel">
-        <option value="">Select Course Level</option>
-        <option>Certificate</option>
-        <option>Diploma</option>
-        <option>Degree</option>
-    </select>
-  <input type="number" id="phoneNumber" placeholder="Phone Number">
-  
-    <input type="password" id="password" placeholder="Create Password">
-
-    <button onclick="registerStudent()">Register</button>
+        <!-- FOOTER with social media -->
+        <footer class="main-footer">
+            <div class="footer-social">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-whatsapp"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+            <p>&copy; 2025 Smart Portal | All rights reserved | Innovation Hub</p>
+        </footer>
+    </main>
 </div>
 
-
-
-<div id="loginBox">
-    <h2>Admin Login only</h2>
-
-    <input type="password" id="adminPass" placeholder="Enter Admin Password is 1234">
-    <button onclick="checkAdmin()">Login</button>
-</div>
-
-<!-- Registration Form -->
-<div id="registerForm" style="display:none;">
-
-
-  <div class="table-container">
-    <table>
-        <thead>
-            <tr>
-                <th>Image</th>
-                <th>Registration_Number</th>
-                <th>First_Name</th>
-                <th>Second_Name</th>
-                <th>Last_Name</th>
-                <th>Course_Name</th>
-                <th>Course_Level</th>
-                 <th>Phone_Number</th>
-                  <th>Status</th>
-                <th>Actions</th>
-              
-            </tr>
-        </thead>
-
-        <tbody id="studentTableBody">
-
-        </tbody>
-    </table>
-</div>
-
-</div>
-
- <a href="index1.html">Open Login Page</a>
-<style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, Helvetica, sans-serif;
-}
-
-body{
-    background:#f4f7fb;
-    padding:20px;
-}
-
-.container{
-    max-width:1200px;
-    margin:auto;
-    height:1200px;
-    
-    
-}
-
-h1{
-    text-align:center;
-    margin-bottom:20px;
-    color:#0d47a1;
-}
-
-.forms{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:20px;
-}
-
-.card{
-    background:white;
-    padding:20px;
-    border-radius:10px;
-    box-shadow:0 4px 10px rgba(0,0,0,0.1);
-}
-
-.card h2{
-    margin-bottom:15px;
-    color:#1565c0;
-}
-
-input, select, button{
-    width:100%;
-    padding:10px;
-    margin-top:10px;
-    border:1px solid #ccc;
-    border-radius:5px;
-}
-
-button{
-    background:#1565c0;
-    color:white;
-    border:none;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-button:hover{
-    background:#0d47a1;
-}
-
-.table-container{
-    margin-top:30px;
-    overflow-x:auto;
-   
-}
-
-table{
-    width:px;
-    border-collapse:collapse;
-    background:white;
-    width: 100%;
-    text-align:left;
-}
-
-table th, table td{
-    border:1px solid #ddd;
-    padding:10px;
-    text-align: left;
-}
-
-table th{
-    background:#1565c0;
-    color:white;
-}
-
-.student-img{
-    width:60px;
-    height:60px;
-    border-radius:50%;
-    object-fit:cover;
-}
-
-.action-btn{
-    padding:5px 10px;
-    border:none;
-    border-radius:5px;
-    color:white;
-    cursor:pointer;
-    margin:2px;
-}
-
-.delete{
-    background:red;
-}
-
-.block{
-    background:orange;
-}
-
-.reset{
-    background:green;
-}
-
-.blocked{
-    background:#ccc;
-}
-
-@media(max-width:768px){
-    .forms{
-        grid-template-columns:1fr;
-    }
-
-header{
- background-color: #1565c0;
- height:100px;
- padding-top: initial;
-}
-img{
- width:100px;
-    height:100px;
-    border-radius:50%;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-.head{
- color: white;
- font-family: serif;
-}
-
-
-
-
-
-
-</style>
-
-
-
-<script>
- let students = JSON.parse(localStorage.getItem("students")) || [];
-
-let usedNumbers = [];
-
-// GENERATE UNIQUE REGISTRATION NUMBER
-function generateRegNumber(){
-
-    let number;
-
-    do{
-        number = Math.floor(1000 + Math.random() * 9000);
-    }while(usedNumbers.includes(number));
-
-    usedNumbers.push(number);
-
-    return number;
-}
-
-// REGISTER STUDENT
-function registerStudent(){
-
-    const imageInput = document.getElementById("studentImage");
-
-    const firstName = document.getElementById("firstName").value;
-
-    const secondName = document.getElementById("secondName").value;
-
-    const lastName = document.getElementById("lastName").value;
-
-    const courseName = document.getElementById("courseName").value;
-
-    const courseLevel = document.getElementById("courseLevel").value;
-    const phoneNumber = document.getElementById("phoneNumber").value;
-    const password = document.getElementById("password").value;
-
-    if(
-        !firstName ||
-        !secondName ||
-        !lastName ||
-        !courseName ||
-        !courseLevel ||
-        !phoneNumber || 
-        !password
-    ){
-        alert("Fill all fields");
-        return;
-    }
-
-    const regNumber = generateRegNumber();
-
-    const reader = new FileReader();
-
-    reader.onload = function(e){
-
-        const student = {
-
-            image:e.target.result,
-            regNumber,
-            firstName,
-            secondName,
-            lastName,
-            courseName,
-            courseLevel,
-            phoneNumber,
-            password,
-            blocked:false
-        };
-
-        students.push(student);
-
-        localStorage.setItem(
-            "students",
-            JSON.stringify(students)
-        );
-
-        displayStudents();
-
-        alert(
-            "Student Registered Successfully\nReg Number: "
-            + regNumber
-        );
-    };
-
-    if(imageInput.files[0]){
-        reader.readAsDataURL(imageInput.files[0]);
-    }else{
-
-        const student = {
-
-            image:"https://via.placeholder.com/60",
-            regNumber,
-            firstName,
-            secondName,
-            lastName,
-            courseName,
-            courseLevel,
-            phoneNumber,
-            password,
-            blocked:false
-        };
-
-        students.push(student);
-
-        localStorage.setItem(
-            "students",
-            JSON.stringify(students)
-        );
-
-        displayStudents();
-
-        alert(
-            "Student Registered Successfully\nReg Number: "
-            + regNumber
-        );
-    }
-}
-
-// DISPLAY STUDENTS
-function displayStudents(){
-
-    const table = document.getElementById("studentTableBody");
-
-    table.innerHTML = "";
-
-    students.forEach((student,index)=>{
-
-        table.innerHTML += `
-        <tr class="${student.blocked ? 'blocked':''}">
-
-            <td>
-                <img src="${student.image}" class="student-img">
-            </td>
-
-            <td>${student.regNumber}</td>
-
-            <td>${student.firstName}</td>
-
-            <td>${student.secondName}</td>
-
-            <td>${student.lastName}</td>
-
-            <td>${student.courseName}</td>
-
-            <td>${student.courseLevel}</td>
-            <td>${student.phoneNumber}</td>
-            <td>
-${student.blocked ? 'Blocked':'Active'}
-            </td>
-
-            <td>
-
-<button class="action-btn delete"
-onclick="deleteStudent(${index})">
-                Remove
-</button>
-
-<button class="action-btn block"
-onclick="toggleBlock(${index})">
-${student.blocked ? 'Unblock':'Block'}
-</button>
-<button class="action-btn reset"
-onclick="resetPassword(${index})">
-                Reset Password
-                </button>
-
-            </td>
-
-        </tr>
-        `;
-    });
-}
-
-// DELETE STUDENT
-function deleteStudent(index){
-
-    students.splice(index,1);
-
-    localStorage.setItem(
-        "students",
-        JSON.stringify(students)
-    );
-
-    displayStudents();
-}
-
-// BLOCK / UNBLOCK
-function toggleBlock(index){
-
-    students[index].blocked =
-    !students[index].blocked;
-
-    localStorage.setItem(
-        "students",
-        JSON.stringify(students)
-    );
-
-    displayStudents();
-}
-
-// RESET PASSWORD
-function resetPassword(index){
-
-    const newPassword =
-    prompt("Enter new password");
-
-    if(newPassword){
-
-        students[index].password = newPassword;
-
-        localStorage.setItem(
-            "students",
-            JSON.stringify(students)
-        );
-
-        alert("Password changed");
-    }
-}
-
-displayStudents();
-</script>
-
-
-</div>
-
-<script>
-function checkAdmin(){
-
-    let password = document.getElementById("adminPass").value;
-
-    if(password === "1234"){
-
-        document.getElementById("loginBox").style.display = "none";
-
-        document.getElementById("registerForm").style.display = "block";
-
-    }else{
-
-        alert("Wrong Password");
-
-    }
-   }
-</script>
-
-
+<script src="script4.js"></script>
 </body>
 </html>
